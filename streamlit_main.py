@@ -99,7 +99,7 @@ def main():
     st.title("DocumentGPT App")
     question = st.text_input("Enter your Question:")
 
-    gemini_api_key = 'YOUR_API_KEY'
+    gemini_api_key=st.secrets["gemini_api_key"]
     doc_path = '48lawsofpower.pdf'
 
     qa_chain,VectorStore = process(gemini_api_key, doc_path)
