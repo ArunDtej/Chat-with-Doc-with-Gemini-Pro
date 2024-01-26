@@ -3,3 +3,4 @@ PyPDF2
 tiktoken
 google-generativeai
 langchain-google-genai
+faiss-cpu
