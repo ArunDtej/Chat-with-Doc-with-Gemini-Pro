@@ -4,3 +4,4 @@ tiktoken
 google-generativeai
 langchain-google-genai
 faiss-cpu
+joblib
