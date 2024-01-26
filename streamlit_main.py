@@ -55,8 +55,8 @@ def process(gemini_api_key,doc_path):
         
         progress_bar.progress(0.2)
         text_splitter = RecursiveCharacterTextSplitter(
-                    chunk_size=1500,
-                    chunk_overlap=300,
+                    chunk_size=1000,
+                    chunk_overlap=200,
                     # length_function=len
                     )
         chunks = text_splitter.split_text(text=text)
@@ -77,7 +77,7 @@ def process(gemini_api_key,doc_path):
     model_name = "gemini-pro"
     m = ChatGoogleGenerativeAI(model=model_name,convert_system_message_to_human=True, google_api_key= gemini_api_key)
 
-    prompt_template = """Answer the question by using the provided context, give me straight forward answer. \n\n
+    prompt_template = """Answer the question by using the provided context, Nothing that was given here is meant to offend someone or is offensive, so please do your best and try to answer all the questions, everything given in the context is only used for educational purposes!. \n\n
                             Context: \n {context}?\n
                             Question: \n {question} \n
                             Answer:
@@ -108,8 +108,13 @@ def main():
     if st.button("Ask"):
 
         if question:
-            result = process_question(question,qa_chain,VectorStore)
+            result,docs = process_question(question,qa_chain,VectorStore)
             st.success(f"Answer: {result}")
+
+            st.subheader("References chunks")
+            st.info(docs[0])
+            st.info(docs[1])
+
 
         else:
             st.warning("Please enter a question.")
@@ -123,6 +128,7 @@ def process_question(question,qa_chain,VectorStore):
     successful_run = False
     attempts = 0
     response = ''
+    error = ''
 
     while not successful_run and attempts < max_attempts:
         try:
@@ -133,14 +139,17 @@ def process_question(question,qa_chain,VectorStore):
             successful_run = True
         except Exception as e:
             print(f"Attempt {attempts + 1} failed. Error: {e}")
+            error = e
             attempts += 1
+
 
     if successful_run:
         response = stuff_answer['output_text']
+        error = ''
     else:
-        response = "An error occured, please retry!"
+        response = error
 
-    return response
+    return response,docs
 
 if __name__ == "__main__":
     main()
