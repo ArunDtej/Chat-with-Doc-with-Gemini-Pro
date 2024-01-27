@@ -97,7 +97,7 @@ def process(gemini_api_key,doc_path):
 def main():
 
     st.title("DocumentGPT App")
-    question = st.text_input("Enter your Question:")
+    question = st.text_input("Enter your Question: What are the power dynamics mentioned in this book?")
 
     gemini_api_key=st.secrets["gemini_api_key"]
     doc_path = '48lawsofpower.pdf'
